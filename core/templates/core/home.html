@@ -1,0 +1,139 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize  %}
+
+
+{% block title %}
+    WeShare-Home
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="container-md my-2 ">
+        <div class="row justify-content-center">
+            <div class=" col-sm-8 rounded px-lg-5 px-0">
+                <div class="card p-1 px-lg-5 pt-lg-5 border-0 shadow-sm">
+                    
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3 d-flex align-items-center">
+                            <img src="{{user.profile.get_profile_pic_url}}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="50" width="50">
+                            <textarea name="body" class="form-control" rows="2" placeholder="What's Happening?" required id="id_body"></textarea>
+                        </div>
+                        <div class="collapse" id='photoCollapse'>
+                            <label for="formFile" class="form-label">Upload Photo</label>
+                            {{form.image}}
+                        </div>
+                        <div class="">
+                            <button class="btn btn-light text-primary buttonLink rounded-pill mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#photoCollapse"><i class="bi bi-image-fill fs-4"></i></button>
+                            <button class="btn btn-primary rounded-pill mt-3" style="float: right;" type="submit">Post</button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        
+        
+            
+        {% for post in  posts  %}
+           
+        
+        <div class="row justify-content-center my-2">
+            <div class=" col-sm-8 rounded px-lg-5 px-0">
+                <div class="card p-1 px-lg-5 pt-lg-5 border-0 shadow ">
+                    <div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <img src="{{ post.author.profile.get_profile_pic_url }}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="50" width="50">
+                            <div class="d-flex flex-wrap">
+                                <p class="fw-bold"> <a class="profileLink" href="{% url 'core:othersProfile' post.author.username %}">{{post.author.profile.fullName}} {% if post.author.profile.verified  %}<i class="bi bi-patch-check-fill text-primary"></i> {% endif %} </a><span class="text-muted">@{{post.author.username}}</span><span class="text-muted fw-normal">. {{ post.created_on | naturaltime}}</span> </p>
+                            </div>
+                            <div class="dropdown ms-auto">
+                                <button class="btn text-dark btn-outline-light" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    
+                                    {% if post.author.id == request.user.id %}
+                                        <li><a class="dropdown-item" href="{% url 'core:postUpdate' post.pk %}"><i class="bi bi-pencil-square px-2"></i> Edit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'core:postDelete' post.pk %}"><i class="bi bi-trash-fill px-2"></i> Delete</a></li>
+                                    {% endif %}
+                                        
+                                  <li><a class="dropdown-item" href="{% url 'core:postDetail' post.id %}"><i class="bi bi-app-indicator px-2"></i> View</a></li>
+                                
+                                </ul>
+                              </div>
+                        </div>
+                        <p class="text-center text-md-start ps-lg-2">{{ post.body }}</p>
+                        
+                        
+                        {% if post.image %}
+                            <div class="image my-2 py-2 d-flex flex-wrap justify-content-center">
+                                <img src="{{ post.image.url }}" alt="" class="mx-2 img-fluid"  width="60%" >
+                            </div>
+                        {% endif %}
+                            
+
+
+
+                        <div class="d-flex">
+                            <a  class="btn btn-light rounded-pill mx-1" style="cursor: context-menu;" href="{% url 'core:postDetail' post.id %}">
+                                {% if request.user in post.likes.all %}
+                                <i class="bi bi-hand-thumbs-up-fill text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">{{post.likes.count}}</span>
+                                {% else %}
+                                <i class="bi bi-hand-thumbs-up text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">{{post.likes.count}}</span>
+                                {% endif %}  
+                            </a>
+                            <a type="button" class="btn btn-light buttonLink rounded-pill" href="{% url 'core:postDetail' post.id %}">
+                                <i class="bi bi-chat-dots-fill text-primary mx-1 fs-5"></i> <span class="badge text-dark bg-light">{{post.comments.count}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="row justify-content-center my-4 mb-4">
+            <div class="col-6 text-center">
+                <h5 class="text-secondary fw-light">Write your First Post or Search and Follow people.</h5>
+            </div>
+        </div>
+        
+        {% endfor %}
+
+        <!-- <div class="row justify-content-center my-2 ">
+            <div class=" col-sm-8 rounded px-lg-5 px-0">
+                <div class="card p-1 px-lg-5 pt-lg-5 border-0 shadow">
+                    <form action="">
+                        <div class="mb-3 d-flex align-items-center">
+                            <img src="{% static 'images/avatars/avatar01.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="50" width="50">
+                            <div class="d-flex flex-wrap">
+                                <p class="fw-bold"> Sudarshan Achaler<i class="bi bi-patch-check-fill text-primary mx-1"></i><span class="text-muted">@SudarshanAchaler</span><span class="text-muted fw-light">. 6h</span> </p>
+                            </div>
+                        </div>
+                        <p class="text-center text-lg-start">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis itaque facilis dignissimos nesciunt enim dicta porro nisi eos inventore? Assumenda?</p>
+            
+                        <div class="image my-2 py-2 d-flex flex-wrap justify-content-center">
+                            
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-light buttonLink rounded-pill">
+                                <i class="bi bi-hand-thumbs-up text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">4</span>
+                              </button>
+                            <button type="button" class="btn btn-light buttonLink rounded-pill">
+                                <i class="bi bi-chat-dots-fill text-primary mx-1 fs-5"></i> <span class="badge text-dark bg-light">4</span>
+                              </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> -->
+        
+        
+
+    </div>
+{% endblock content %}
+    

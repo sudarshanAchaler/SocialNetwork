@@ -1,0 +1,142 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    WeShare-Profile
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="container pt-3 ">
+        <div class="row py-3 justify-content-center align-items-center border-bottom">
+            <div class="col-lg-3 text-center ">
+                <img src="{{user.profile.get_profile_pic_url}}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="200" width="200">
+                <form action="{% url 'core:follow' user.profile.pk %}" method="POST">
+                    {% csrf_token %}
+                    {% if request.user.profile == user.profile %}
+                    {% elif is_following  %}
+                    <p class="mt-3"><button type="submit" class="btn btn-outline-danger fw-bold">Unfollow</button></p>
+                    {% else %}
+                    <p class="mt-3"><button type="submit" class="btn btn-outline-primary fw-bold" >Follow</button></p>
+                    {% endif %}
+                </form>
+                    
+            </div>
+            <div class="col-lg-5 text-center text-lg-start ">
+                <h2 class="display-6 fw-bold">{{user.profile.fullName}}{% if user.profile.verified  %}<i class="bi bi-patch-check-fill text-primary mx-2"></i> {% endif %}</h2>
+                <p class="text-muted">@{{user.username}}</p>
+                <p class="text-secondary small"><i class="bi bi-calendar3 px-1"></i> Joined {{user.date_joined}}</p>
+                <p class="text-secondary small"><i class="bi bi-geo-alt-fill px-1"></i> Lives in {{user.profile.location}}</p>
+                <p >"{{user.profile.bio}}"</p>
+
+                <ul class="row list-inline text-center ">
+                    <li class="list-inline-item text-center  col-lg-2 ">
+                        <p class="my-0 fw-bold">{{user.posts.count}}</p>
+                        <p>Posts</p>
+                    </li>
+                    <li class="list-inline-item text-center  col-lg-2">
+                        <p class="my-0 fw-bold">{{user.profile.followers.count}}</p>
+                        <p><a href="{% url 'core:followersList' user.profile.id %}" class="text-dark">Followers</a></p>
+                    </li>
+                    <li class="list-inline-item text-center  col-lg-2">
+                        <p class="my-0 fw-bold">{{user.profile.following.count}}</p>
+                        <p><a href="{% url 'core:followingList' user.profile.id %}" class="text-dark">Following</a></p>
+                    </li>
+                  </ul>
+                
+                
+            </div>
+        </div>
+
+        <div class="row justify-content-center my-3 mb-4">
+            <div class="col-6 text-center ">
+                <h3 class="fw-bold text-primary">{{firstName}}'s Posts</h3>
+            </div>
+        </div>
+
+        
+        {% for post in posts %}
+            
+        
+        
+        <div class="row justify-content-center my-2 mt-3">
+            <div class=" col-sm-10 rounded px-lg-5 px-0">
+                <div class="card p-1 px-lg-5 pt-lg-5 border-0 shadow">
+                    <div >
+                        <div class="mb-3 d-flex align-items-center">
+                            <img src="{{user.profile.get_profile_pic_url}}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="50" width="50">
+                            <div class="d-flex flex-wrap">
+                                <p class="fw-bold"> {{user.profile.fullName}} {% if user.profile.verified  %}<i class="bi bi-patch-check-fill text-primary mx-1"></i> {% endif %}<span class="text-muted">@{{user.username}}</span><span class="text-muted fw-light">. {{ post.created_on }}</span> </p>
+                            </div>
+                        </div>
+                        <p class="text-center text-md-start">{{ post.body }}</p>
+                        
+                        {% if post.image %}
+                            <div class="image my-2 py-2 d-flex flex-wrap justify-content-center">
+                                <img src="{{ post.image.url }}" alt="" class="mx-2 img-fluid"  width="60%" >
+                            </div>
+                        {% endif %}
+
+
+                        <div class="d-flex">
+                            <a  class="btn btn-light rounded-pill mx-1" style="cursor: context-menu;" href="{% url 'core:postDetail' post.id %}">
+                                {% if request.user in post.likes.all %}
+                                <i class="bi bi-hand-thumbs-up-fill text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">{{post.likes.count}}</span>
+                                {% else %}
+                                <i class="bi bi-hand-thumbs-up text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">{{post.likes.count}}</span>
+                                {% endif %}  
+                            </a>
+                            <a type="button" class="btn btn-light buttonLink rounded-pill" href="{% url 'core:postDetail' post.id %}">
+                                <i class="bi bi-chat-dots-fill text-primary mx-1 fs-5"></i> <span class="badge text-dark bg-light">{{post.comments.count}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="row justify-content-center my-3 mb-4">
+            <div class="col-6 text-center">
+                <h5 class="text-secondary fw-light">Nothing to show here</h5>
+            </div>
+        </div>
+
+        {% endfor %}
+
+
+
+        <!-- <div class="row justify-content-center my-2 ">
+            <div class=" col-sm-10 rounded px-lg-5 px-0">
+                <div class="card p-1 px-lg-5 pt-lg-5 border-0 shadow">
+                    <form action="">
+                        <div class="mb-3 d-flex align-items-center">
+                            <img src="{{user.profile.get_profile_pic_url}}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="50" width="50">
+                            <div class="d-flex flex-wrap">
+                                <p class="fw-bold"> {{user.profile.fullName}}<i class="bi bi-patch-check-fill text-primary mx-1"></i><span class="text-muted">@{{user.username}}</span><span class="text-muted fw-light">. 6h</span> </p>
+                            </div>
+                        </div>
+                        <p class="text-center text-lg-start">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis itaque facilis dignissimos nesciunt enim dicta porro nisi eos inventore? Assumenda?</p>
+            
+                        <div class="image my-2 py-2 d-flex flex-wrap justify-content-center">
+                            
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-light buttonLink rounded-pill">
+                                <i class="bi bi-hand-thumbs-up text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">4</span>
+                              </button>
+                            <button type="button" class="btn btn-light buttonLink rounded-pill">
+                                <i class="bi bi-chat-dots-fill text-primary mx-1 fs-5"></i> <span class="badge text-dark bg-light">4</span>
+                              </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> -->
+
+
+
+    </div>
+{% endblock content %}
+    

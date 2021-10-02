@@ -1,0 +1,140 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    WeShare-EditProfile
+{% endblock title %}
+
+
+
+{% block content %}
+    <div class="container pt-3">
+
+
+        <div class="row mt-4">
+            
+            <div class="col-12 d-flex flex-wrap justify-content-center my-1">
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar01.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>1</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar02.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>2</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar03.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>3</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar04.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>4</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar05.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>5</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar06.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>6</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar11.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>7</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar12.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>8</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar13.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>9</figcaption>
+                </div>
+                <div class="text-center">
+                    <img src="{% static 'images/avatars/avatar14.jpg' %}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="70" width="70">
+                    <figcaption>10</figcaption>
+                </div>
+                
+            </div>
+
+        </div>
+
+
+        <div class="row justify-content-center border-bottom mt-3">
+            <div class="col-8 text-center">
+                <h2 class="display-4 fw-bold "><i class="bi bi-chat-text-fill px-1 text-success "></i>WeShare</h2>
+                <h2 class="fw-bold">Edit Profile</h2>
+            </div>
+        </div>
+
+        
+
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row m-2 p-1 p-lg-3 px-lg-5 ">
+
+                {% if form.errors %}
+                    <div class=" col-12 text-danger border border-danger mb-4 p-2">
+                        <p class="my-0">{{form.non_field_errors| striptags}}</p>
+                        <p class="my-0">{{form.fullName.errors| striptags}}</p>
+                        <p class="my-0">{{form.gender.errors| striptags}}</p>
+                        <p class="my-0">{{form.birthDate.errors| striptags}}</p>
+                        <p class="my-0">{{form.location.errors| striptags}}</p>
+                        <p class="my-0">{{form.bio.errors| striptags}}</p>
+                        <p class="my-0">Avatar Number Error: {{form.profilePicture_num.errors| striptags}}</p>
+                    </div>
+                {% endif %}
+                
+                <div class="col-lg-6">
+                    <div class="mb-3">
+                        <label for="id_fullName"  class="form-label">FullName:</label> 
+                        {{form.fullName}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_gender" class="form-label">Gender:</label> 
+                        {{form.gender}}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_birthDate" class="form-label">BirthDate:</label> 
+                        {{form.birthDate}} 
+                        <p class="helptext form-text">Enter Date in 1 January 2000 format.</p>
+                    </div>
+                    
+                    
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="mb-3">
+                        <label for="id_location" class="form-label">Location:</label> 
+                        {{form.location}} 
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_bio" class="form-label">Bio:</label> 
+                        {{form.bio}} 
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_profilePicture_num" class="form-label">Avatar Number</label> 
+                        {{form.profilePicture_num}} 
+                        <p class="form-text">Select one from above avatars.</p>
+                    </div>
+                    
+                </div>
+                
+                    <div class="text-center my-3">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{% url 'core:profile' %}" class="btn btn-outline-danger">Cancel</a>
+                    </div>
+                </div>
+            </form>
+      
+            
+            
+        </div>
+        
+        
+        
+        {% endblock content %}
+    
+    

@@ -1,0 +1,142 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block title %}
+    WeShare-PostDetail
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="container">
+
+        
+
+        <div class="row justify-content-center my-2 ">
+            <div class=" col-sm-10 rounded px-lg-5 px-0">
+                <div class="card p-1 px-lg-5 pt-lg-5 border-0 shadow">
+                    <div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <img src="{{ post.author.profile.get_profile_pic_url }}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="50" width="50">
+                            <div class="d-flex flex-wrap">
+                                <p class="fw-bold"> {{post.author.profile.fullName}} {% if post.author.profile.verified %}<i class="bi bi-patch-check-fill text-primary mx-1"></i>{% endif %}<span class="text-muted">@{{post.author.username}}</span><span class="text-muted fw-light">. {{post.created_on}}</span> </p>
+                            </div>
+                        </div>
+                        <p class="text-center text-md-start">{{post.body}}</p>
+            
+                        {% if post.image %}
+                            <div class="image my-2 py-2 d-flex flex-wrap justify-content-center">
+                                <img src="{{ post.image.url }}" alt="" class="mx-2 img-fluid" width='60%' >
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3 ">
+                            <form action="{% url 'core:like' post.pk %}" method="POST" class="mx-1">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <button type="submit" class="btn btn-light buttonLink rounded-pill mb-4">
+                                    
+                                    {% if request.user in post.likes.all %}
+                                    <i class="bi bi-hand-thumbs-up-fill text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">{{post.likes.count}}</span>
+                                    {% else %}  
+                                    <i class="bi bi-hand-thumbs-up text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">{{post.likes.count}}</span>
+                                    {% endif %}
+                                        
+                                </button>
+                                <button type="button" class="btn btn-light buttonLink rounded-pill mb-4" data-bs-toggle="collapse" data-bs-target="#writeComment">
+                                    <i class="bi bi-chat-dots-fill text-primary mx-1 fs-5"></i> <span class="badge text-dark bg-light">{{post.comments.count}}</span>
+                                </button>
+                                
+                            </form>
+                              <div class="collapse" id="writeComment">
+                                <form class="" method="POST">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        {{form.comment}}
+                                    </div>
+                                    <div class="">
+                                        <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-reply-fill mx-1"></i>Reply</button>
+                                    </div>
+                                </form>
+
+                                
+                                
+
+
+                            </div>
+                        </div>
+
+            
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        
+  
+
+
+        <div class="row justify-content-center mt-4 mb-3">
+            <div class=" col-sm-10 rounded px-lg-5 px-0">
+                <div>
+                    <h1 class="display-5 border-bottom border-secondary">Comments</h1>
+                </div>
+            </div>
+        </div>
+
+        {% for comment in comments %}
+            
+        <div class="row justify-content-center my-2 ">
+            <div class=" col-sm-10 rounded px-lg-5 px-0">
+                <div class="card p-1 px-lg-5 pt-lg-4 border-0 shadow-lg">
+                    <div>
+                        <div class="mb-3 d-flex align-items-start border-bottom ">
+                            <img src="{{ comment.author.profile.get_profile_pic_url }}" alt="" class="bd-placeholder-img rounded-circle border-primary mx-2" height="50" width="50">
+                            <div class="">
+                                <p class="fw-bold mb-1"> {{comment.author.profile.fullName}} {% if comment.author.profile.verified %}<i class="bi bi-patch-check-fill text-primary mx-1"></i>{% endif %} <span class="text-muted">@{{comment.author.username}}</span><span class="text-muted fw-light ">. {{comment.created_on | naturaltime}}</span> </p>
+                                <p class="text-muted fw-bold small"> Replying to <a class="text-dark" href="{% url 'core:othersProfile' post.author.username %}">@{{post.author.username}}</a> </p>
+                            </div>
+                        </div>
+
+                        <p class="text-center text-lg-start">{{comment.comment}}</p>
+            
+                        <div class="image my-2 py-2 d-flex flex-wrap justify-content-center">
+                            
+                        </div>
+                        <!-- <div class="mb-3">
+                            <button type="button" class="btn btn-light buttonLink rounded-pill mb-4">
+                                <i class="bi bi-hand-thumbs-up text-primary mx-1 fs-5"></i> <span class="badge  text-dark bg-light">4</span>
+                              </button>
+                            <button type="button" class="btn btn-light buttonLink rounded-pill mb-4" data-bs-toggle="collapse" data-bs-target="#writeComment">
+                                <i class="bi bi-chat-dots-fill text-primary mx-1 fs-5"></i> <span class="badge text-dark bg-light">{{post.comments.count}}</span>
+                              </button>
+                              <div class="collapse" id="writeComment">
+                                <div class="card card-body">
+                                  Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="row justify-content-center my-3 mb-4">
+            <div class="col-6 text-center">
+                <h5 class="text-secondary fw-light">Be the first one to comment on this post.</h5>
+            </div>
+        </div>
+
+        {% endfor %}
+        
+    </div>
+{% endblock content %}
+    
+
+
+    

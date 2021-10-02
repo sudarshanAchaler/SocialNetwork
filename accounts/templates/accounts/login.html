@@ -1,0 +1,42 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    WeShare-Login
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="container-lg  mainContainer px-0 px-lg-5">
+        <div class="card text-center p-5 border-0 shadow-lg childCard">
+            <h2 class="display-5 fw-bold text-primary brand"><i class="bi bi-chat-text-fill"></i>WeShare</h2>
+            <h2 class="display-6 fw-bold mb-4">Login</h2>
+            <form action="" method="POST">
+                {% csrf_token %}
+        
+                {% if form.errors %}
+                    <div class="text-danger border border-danger mb-4 p-2">
+                        <p class="my-0">{{form.non_field_errors| striptags}}</p>
+                        <p class="my-0">{{form.username.errors| striptags}}</p>
+                        <p class="my-0">{{form.password.errors| striptags}}</p>
+                    </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username" class="form-control" placeholder="Enter Username" >
+                </div>
+                
+                <div class="mb-3">
+                    <input type="password" name="password" autocomplete="current-password" required id="id_password" class="form-control" placeholder="Enter Password">
+                </div>
+                <input type="submit" value="Login" class="btn btn-primary btn-lg">
+            </form>
+
+            <p class=" mt-3">Don't have an account? Create a new one for free <a href="{% url 'accounts:register' %}"> Sign up</a></p>
+
+        </div>
+    </div>
+    
+{% endblock content %}
+    

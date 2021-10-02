@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    WeShare-VerifyEmail
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="container" >
+        <div class="row justify-content-center align-items-center mt-5">
+            <div class="col-6 card border-0  shadow" style="width: 25rem;" >
+                <div class="card-body">
+                    <h3 class="text-center fw-bold border-bottom">Email Verification</h3>
+                    <img src="{% static 'images/verifyEmail.jpg' %}" class="img-fluid">
+
+                      <form method="POST">
+                          {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                            <input type="email" class="form-control" name='email' placeholder="name@example.com">
+                        </div>
+                        <button class="btn btn-primary" type="submit">Send Email</button>
+                        <div class="my-2 small">
+                            <p>We will send an email on above email, Click on the link in email to verify your email id.</p>
+                        </div>
+                      </form>
+
+                </div>
+              </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
+    
